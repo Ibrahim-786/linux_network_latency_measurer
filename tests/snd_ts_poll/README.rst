@@ -74,6 +74,8 @@ About `SO_SELECT_ERR_QUEUE`
 	"net: add option to enable error queue packets waking
 	      select"
 
+::
+
 > Currently, when a socket receives something on the error
 > queue it only wakes up the socket on select if it is in
 > the "read" list, that is the socket has something to read.
@@ -92,7 +94,8 @@ About `SO_SELECT_ERR_QUEUE`
 	[Linuxptp-devel] [PATCH]
 	  sk: Modify poll to poll on ERRQUEUE
 
-On Fri, Oct 31, 2014 at 02:05:14PM -0500, Joe Schaack wrote:
+On Fri, Oct 31, 2014 at 02:05:14PM -0500, Joe Schaack wrote::
+
 > Previously the poll in `sk_receive` would "timeout" and when
 > it did so would check the `ERRQUEUE` for data and set
 > `POLLERR`.  This meant that if `sk_tx_timeout` was set to
