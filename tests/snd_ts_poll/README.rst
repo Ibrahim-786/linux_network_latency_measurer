@@ -42,7 +42,7 @@ With `USE_POLLIN`
 -----------------
 
 The thread wakes up with `POLLERR` after every packet sent,
-independently of `SEND_IN_SAME_THREAD`.
+regardless of `SEND_IN_SAME_THREAD`.
 
 
 With `USE_POLLPRI`
