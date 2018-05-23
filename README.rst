@@ -62,25 +62,24 @@ There are four steps to complete a measurement:
 Implementation FAQ
 ==================
 
-Q. Why setting SO_SELECT_ERR_QUEUE socket option?
-A. The option allows poll wake up when data is available
-   in error queue.
+**Why setting SO_SELECT_ERR_QUEUE socket option?**
+The option allows poll wake up when data is available in
+error queue.
 
-Q. Why are two sockets used, one to receive and another to
-   send?
-A. One socket is used to send the packets and get their
-   timestamps. The other is used to receive packets from
-   mirror. It was done this way because when receiving
-   from the same socket that send and return timestamps,
-   many unexpected wake ups happened with poll() returning
-   POLLERR and sometimes POLLPRI (possibly because of
-   SO_SELECT_ERR_QUEUE).
+**Why are two sockets used, one to receive and another to
+send?**
+One socket is used to send the packets and get their
+timestamps. The other is used to receive packets from
+mirror. It was done this way because when receiving from
+the same socket that send and return timestamps, many
+unexpected wake ups happened with poll() returning POLLERR
+and sometimes POLLPRI (possibly because of
+SO_SELECT_ERR_QUEUE).
 
-Q. Why is the ring buffer the way it is?
-A. Because it fits exactly the purpose of the program.
-   It allows packets arriving out of order, detecting
-   duplicates, and the user to define a maximum latency
-   for them.
+**Why is the ring buffer the way it is?**
+Because it fits exactly the purpose of the program. It
+allows packets arriving out of order, detecting duplicates,
+and the user to define a maximum latency for them.
 
 
 Writer file format
