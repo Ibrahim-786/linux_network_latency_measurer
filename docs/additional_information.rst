@@ -12,6 +12,8 @@ Network timing
 NTP vs PTP
 ----------
 
+::
+
 > Is the accuracy you need measured in microseconds or nanoseconds?
 > If the answer is yes, you want PTP (IEEE 1588).  If the answer is
 > in milliseconds or seconds, then you want NTP.
@@ -21,6 +23,8 @@ https://blog.meinbergglobal.com/2013/11/22/ntp-vs-ptp-network-timing-smackdown/
 
 Why is IEEE 1588 so accurate?
 -----------------------------
+
+::
 
 > Why is IEEE 1588 so accurate? Two words: Hardware timestamping.
 > That’s it, really!
@@ -59,6 +63,8 @@ added in the following commit on Linux kernel tree.
 
 An email about polling on error queue
 -------------------------------------
+
+::
 
 > Previously the poll in sk_receive would "timeout" and when it did so
 > would check the ERRQUEUE for data and set POLLERR.  This meant that if
