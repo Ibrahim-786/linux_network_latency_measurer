@@ -108,17 +108,17 @@ print_help(void)
 	print_usage();
 	printf(
 "  -b <buffering_size> Number of entries to store before writing in file\n"
-"  -c <packet_count> Number of packets to send after every interval.\n"
+#ifdef SEND_COUNT
+"  -c <packets_to_send> Number of packets to send before exit.\n"
+"     Default: unlimited.\n"
+#endif
 "  -f [bin|csv|friendly (default)] Output type.\n"
 "     Friendly, binary, comma separated values.\n"
 "  -i <sleep_ms> (in milliseconds) Interval for sending packets.\n"
-"  -m <max_latency> (in milliseconds) Maximum latency allowed for packets.\n"
+"  -n <packet_count> Number of packets to send after every interval.\n"
 "  -o <output_file> File to write measurements (default stdout).\n"
 "  -t Enable multi thread mode\n"
-#ifdef SEND_COUNT
-"  -z <packets_to_send> Number of packets to send before exit.\n"
-"     Default: unlimited.\n"
-#endif
+"  -W <timeout> (in milliseconds) Maximum latency allowed for packets.\n"
 	);
 }
 
@@ -468,17 +468,20 @@ parse_command_line_args(struct measurer *m, int argc, char **argv)
 
 	/* '+' = stop option processing when the first non-option is found */
 #ifdef SEND_COUNT
-	while ((c = getopt(argc, argv, "+b:c:f:i:m:o:tz:h")) != -1) {
+	while ((c = getopt(argc, argv, "+b:c:f:i:n:o:thW:")) != -1) {
 #else
-	while ((c = getopt(argc, argv, "+b:c:f:i:m:o:th")) != -1) {
+	while ((c = getopt(argc, argv, "+b:f:i:n:o:thW:")) != -1) {
 #endif
 		switch (c) {
 		case 'b':
 			m->result_buffering_size = atoi(optarg);
 			break;
+#ifdef SEND_COUNT
 		case 'c':
-			m->packet_count = atoi(optarg);
+			if ((m->n_to_send = atoi(optarg)) <= 0)
+				m->n_to_send = -1;
 			break;
+#endif
 		case 'f':
 			if (strcmp(optarg, "bin") == 0)
 				m->output_type = WRITER_OUTPUT_BINARY;
@@ -488,9 +491,8 @@ parse_command_line_args(struct measurer *m, int argc, char **argv)
 		case 'i':
 			m->sleep_ms = atoi(optarg);
 			break;
-		case 'm':
-			/* in milliseconds */
-			m->max_latency = atoi(optarg);
+		case 'n':
+			m->packet_count = atoi(optarg);
 			break;
 		case 'o':
 			/* get filename where we'll write our measurements */
@@ -499,12 +501,10 @@ parse_command_line_args(struct measurer *m, int argc, char **argv)
 		case 't':
 			m->is_multi_thread = 1;
 			break;
-#ifdef SEND_COUNT
-		case 'z':
-			if ((m->n_to_send = atoi(optarg)) <= 0)
-				m->n_to_send = -1;
+		case 'W':
+			/* in milliseconds */
+			m->max_latency = atoi(optarg);
 			break;
-#endif
 		case 'h':
 		default:
 			print_help();
