@@ -32,14 +32,13 @@
 #include <poll.h> /* POLL* */
 #include <pthread.h> /* pthread_*() */
 #include <signal.h> /* SIG_BLOCK */
-#include <stdarg.h> /* getopt() */
 #include <stdint.h> /* int*_t */
 #include <stdio.h> /* printf() */
 #include <stdlib.h> /* atoi() */
 #include <string.h> /* strcmp() */
 #include <sys/socket.h> /* bind() */
 #include <sys/types.h> /* bind() */
-#include <unistd.h> /* close() pipe() */
+#include <unistd.h> /* getopt() close() pipe() */
 
 #include <linux/net_tstamp.h> /* timestamp stuff */
 
