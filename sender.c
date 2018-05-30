@@ -162,7 +162,7 @@ sender_do_its_job(struct sender *s)
 #endif
 
 		entry->id = s->current_id;
-		entry->flags = 0;
+		entry->flags = PACKET_SENT;
 
 		single_ring_buffer_update(&s->send_history->control);
 

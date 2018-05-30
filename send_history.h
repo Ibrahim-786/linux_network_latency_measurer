@@ -101,7 +101,8 @@ struct send_history {
 
 /* values in flags */
 
-#define PACKET_TIMESTAMPED  (1 << 0)
-#define PACKET_RECEIVED     (1 << 1)
+#define PACKET_SENT         (1 << 1)
+#define PACKET_TIMESTAMPED  (1 << 2)
+#define PACKET_RECEIVED     (1 << 3)
 
 #endif /* SEND_HISTORY_H */
