@@ -183,12 +183,18 @@ sender_do_its_job(struct sender *s)
 			s->current_id = 0;
 
 #ifdef WRITE_IN_SENDER
-		/* TODO: it must print packets that have missed */
-		if (copy.flags & PACKET_TIMESTAMPED
-		    && copy.flags & PACKET_RECEIVED) {
-			time_diff(&diff, &copy.recv_ts, &copy.ts);
+		if (copy.flags & PACKET_SENT) {
 			tmp_result.id = copy.id;
-			tmp_result.diff = diff;
+
+			if (copy.flags & PACKET_TIMESTAMPED &&
+			    copy.flags & PACKET_RECEIVED) {
+				time_diff(&diff, &copy.recv_ts, &copy.ts);
+				tmp_result.diff = diff;
+			} else {
+				tmp_result.diff.tv_sec = 0;
+				tmp_result.diff.tv_nsec = 0;
+			}
+
 			if (result_buffer_insert_entry(s->result_buffer,
 			    &tmp_result) == -1)
 				return -1;
