@@ -106,8 +106,8 @@ print_help(void)
 {
 	print_usage();
 	printf(
-"  -h Print this help."
-"  -b <buffering_size> Number of entries to store before writing in file\n"
+"  -h Print this help.\n"
+"  -b <buffering_size> Number of entries to store before writing in file.\n"
 #ifdef SEND_COUNT
 "  -c <packets_to_send> Number of packets to send before exit.\n"
 "     Default: unlimited.\n"
@@ -117,7 +117,7 @@ print_help(void)
 "  -i <sleep_ms> (in milliseconds) Interval for sending packets.\n"
 "  -n <packet_count> Number of packets to send after every interval.\n"
 "  -o <output_file> File to write measurements (default stdout).\n"
-"  -t Enable multi thread mode\n"
+"  -t Enable multi thread mode.\n"
 "  -W <timeout> (in milliseconds) Maximum latency allowed for packets.\n"
 	);
 }
