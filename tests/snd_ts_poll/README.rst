@@ -10,16 +10,17 @@ What is it?
 
 The purpose is to send packets and poll/wait for their
 timestamps. In normal behavior, one thread poll for
-timestamps `loop()`, and other thread send packets `main()`.
+timestamps ``loop()``, and other thread send packets
+``main()``.
 
 We change the behavior by:
 
-- Sending packets in the same thread that poll for their timestamps.
-  `SEND_IN_SAME_THREAD` flag.
-- Using `POLLIN` in poll events. `USE_POLLIN` flag.
-- Using `POLLPRI` in poll events. Involves setting a kernel option to
-  "instantaneous wake up" on error queue. `USE_POLLPRI` flag. `USE_POLLIN`
-  flag is ignored.
+- Sending packets in the same thread that poll for their
+  timestamps. ``SEND_IN_SAME_THREAD`` flag.
+- Using ``POLLIN`` in poll events. ``USE_POLLIN`` flag.
+- Using ``POLLPRI`` in poll events. Involves setting a
+  kernel option to "instantaneous wake up" on error queue.
+  ``USE_POLLPRI`` flag. ``USE_POLLIN`` flag is ignored.
 
 
 Compiling
@@ -29,7 +30,7 @@ Compiling
 
 	$ gcc -pthread -o main common.c main.c
 
-To add a flag (see section above) use `-D <flag>`
+To add a flag (see section above) use ``-D <flag>``
 
 
 Behavior
@@ -38,34 +39,34 @@ Behavior
 Tests done on Linux 4.13.12 (glibc 2.24).
 
 
-With `USE_POLLIN`
------------------
+With ``USE_POLLIN``
+-------------------
 
-The thread wakes up with `POLLERR` after every packet sent,
-regardless of `SEND_IN_SAME_THREAD`.
-
-
-With `USE_POLLPRI`
-------------------
-
-The thread wakes up normally with `POLLPRI|POLLERR`,
-regardless of `SEND_IN_SAME_THREAD`.
+The thread wakes up with ``POLLERR`` after every packet
+sent, regardless of ``SEND_IN_SAME_THREAD``.
 
 
-With `POLLERR` (default)
-------------------------
+With ``USE_POLLPRI``
+--------------------
 
-When `SEND_IN_SAME_THREAD` the thread wakes up normally with
-`POLLERR`. Otherwise `loop()` doesn't wake up when a packet
-is sent from `main()` thread.
+The thread wakes up normally with ``POLLPRI|POLLERR``,
+regardless of ``SEND_IN_SAME_THREAD``.
+
+
+With ``POLLERR`` (default)
+--------------------------
+
+When ``SEND_IN_SAME_THREAD`` the thread wakes up normally
+with ``POLLERR``. Otherwise ``loop()`` doesn't wake up when
+a packet is sent from ``main()`` thread.
 
 
 Notes
 =====
 
 
-About `SO_SELECT_ERR_QUEUE`
----------------------------
+About ``SO_SELECT_ERR_QUEUE``
+-----------------------------
 
 | Linux kernel
 | commit: ``7d4c04fc170087119727119074e72445f2bb192b``
@@ -109,10 +110,10 @@ About `SO_SELECT_ERR_QUEUE`
 The rest of the message is a patch.
 
 
-The `POLLIN` thing
-------------------
+The ``POLLIN`` thing
+--------------------
 
 In normal behavior (when sending from a different thread)
-polling with `events = POLLIN` makes the thread wake up with
-`POLLERR`. However, when `events = 0` or `events = POLLERR`
+polling with ``events = POLLIN`` makes the thread wake up with
+``POLLERR``. However, when ``events = 0`` or ``events = POLLERR``
 the thread simply doesn't wake up.
