@@ -106,6 +106,7 @@ print_help(void)
 {
 	print_usage();
 	printf(
+"  -h Print this help."
 "  -b <buffering_size> Number of entries to store before writing in file\n"
 #ifdef SEND_COUNT
 "  -c <packets_to_send> Number of packets to send before exit.\n"
