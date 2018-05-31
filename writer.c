@@ -44,12 +44,20 @@ do_output(struct writer *w, struct result *r)
 
 	switch (w->output_type) {
 	case WRITER_OUTPUT_FRIENDLY:
+		if (!r->diff.tv_sec && !r->diff.tv_nsec) {
+			fprintf(w->file, "%ld Error!\n", r->id);
+			return;
+		}
 		fprintf(w->file, "%ld %ld.%06ld ms\n",
 		        r->id,
 		        r->diff.tv_sec * 1000 + r->diff.tv_nsec / 1000000,
 		        r->diff.tv_nsec % 1000000);
 		break;
 	case WRITER_OUTPUT_CSV:
+		if (!r->diff.tv_sec && !r->diff.tv_nsec) {
+			fprintf(w->file, "%ld,error\n", r->id);
+			return;
+		}
 		/* microseconds */
 		fprintf(w->file, "%ld,%ld\n", r->id,
 			r->diff.tv_sec * 1000000 + r->diff.tv_nsec / 1000);
