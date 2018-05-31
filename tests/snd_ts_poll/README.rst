@@ -49,7 +49,7 @@ With `USE_POLLPRI`
 ------------------
 
 The thread wakes up normally with `POLLPRI|POLLERR`,
-independently of `SEND_IN_SAME_THREAD`.
+regardless of `SEND_IN_SAME_THREAD`.
 
 
 With `POLLERR` (default)
