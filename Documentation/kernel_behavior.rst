@@ -126,6 +126,35 @@ In ``inetsw_array`` of ``net/ipv4/af_inet.c`` the routines of
 TCP/UDP/ICMP protocols are registered.
 
 
+Setting timerfd
+===============
+
+In a timerfd, pending expirations of the timer are reset
+after ``timerfd_settime()`` call::
+
+	0 [fs/timerfd.c] timerfd_settime()
+	1 do_timerfd_settime()
+	2 timerfd_setup()
+
+Inside ``timerfd_setup()``, the expired flag and ticks are
+set to zero.
+
+In ``[fs/timerfd.c] timerfd_read()`` the value put in the
+userspace buffer is the ticks count.
+
+It's worth to mention that the behavior for
+``timer_settime()`` is not relevant here given that it
+does not use file descriptors. However, as defined by
+POSIX, timer_settime_POSIX_::
+
+> The effect of disarming or resetting a timer with pending
+> expiration notifications is unspecified.
+
+.. _timer_settime_POSIX:
+   http://pubs.opengroup.org/onlinepubs/9699919799/functions
+   /timer_getoverrun.html
+
+
 Syscall definition
 ==================
 
