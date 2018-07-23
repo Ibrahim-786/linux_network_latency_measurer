@@ -599,7 +599,7 @@ main(int argc, char **argv)
 		set_and_goto(ret, 1, _go_cleanup_measurer);
 
 	/*
-	 * multi thread mode: Run each step in a separated
+	 * multi thread mode: Run each step in a separate
 	 * thread.
 	 *
 	 * single thread mode: Run all steps except writer
