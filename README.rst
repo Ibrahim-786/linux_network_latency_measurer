@@ -4,7 +4,8 @@ Network latency measurer
 
 :Date: 25/09/2017, 06/10/2017, 14/10/2017
 
-Measure round-trip latencies of isochronous sent packets.
+Measure round-trip latencies of packets sent in isochronous
+intervals.
 
 There are two computers involved, the measurer and the
 mirror. The measurer sends packets to the mirror, which in
