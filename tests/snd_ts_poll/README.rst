@@ -60,6 +60,9 @@ When ``SEND_IN_SAME_THREAD`` the thread wakes up normally
 with ``POLLERR``. Otherwise ``loop()`` doesn't wake up when
 a packet is sent from ``main()`` thread.
 
+Note: ``POLLERR`` is always set by the kernel regardless
+of the requested events.
+
 
 Notes
 =====
