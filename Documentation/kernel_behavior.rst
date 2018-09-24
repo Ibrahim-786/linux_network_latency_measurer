@@ -62,7 +62,7 @@ section above.
 .. Note: Are we inside an IRQ handler? How did we
    get here? Is the following statement true?
 
-Now it's the time to packet to be sent to device::
+Now it's the time to packet to be queued to device::
 
 	0 [net/core/dev.c] __dev_queue_xmit()
 	1 [net/core/skbuff.c] __skb_tstamp_tx()
