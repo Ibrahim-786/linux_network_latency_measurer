@@ -113,10 +113,14 @@ About ``SO_SELECT_ERR_QUEUE``
 The rest of the message is a patch.
 
 
-The ``POLLIN`` thing
+The ``POLLIN`` issue
 --------------------
 
 In normal behavior (when sending from a different thread)
 polling with ``events = POLLIN`` makes the thread wake up with
 ``POLLERR``. However, when ``events = 0`` or ``events = POLLERR``
 the thread simply doesn't wake up.
+
+Note (24/09/2018):
+This was actually a BUG solved by the commit 6e5d58fdc9bedd0255a8
+("skbuff: Fix not waking applications when errors are enqueued").
