@@ -8,7 +8,7 @@ Poll for send timestamps
 What is it?
 ===========
 
-The purpose is to send packets and poll/wait for their
+This is a test for error queue polling that uses tx
 timestamps. In normal behavior, one thread poll for
 timestamps ``loop()``, and other thread send packets
 ``main()``.
