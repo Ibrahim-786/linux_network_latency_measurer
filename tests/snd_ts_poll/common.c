@@ -17,20 +17,14 @@
 #include "common.h"
 
 int
-do_poll(int sfd)
+do_poll(int sfd, short request_mask)
 {
 	struct pollfd pfd;
 
 	/* prepare */
 	memset(&pfd, 0, sizeof(pfd));
 	pfd.fd = sfd;
-#ifdef USE_POLLPRI
-	pfd.events = POLLPRI;
-#elif defined(USE_POLLIN)
-	pfd.events = POLLIN;
-#else
-	pfd.events = POLLERR;
-#endif
+	pfd.events = request_mask;
 
 	/* poll */
 	return poll(&pfd, 1, -1);
@@ -59,7 +53,6 @@ do_send(int sfd)
 	       sizeof(saddr));
 }
 
-#ifdef USE_POLLPRI
 /*
  * SO_SELECT_ERR_QUEUE: wake the socket with `POLLPRI|POLLERR` if it is in the
  * error list, which would enable software to wait on error queue packets
@@ -77,7 +70,6 @@ set_pollpri_on_errqueue(int sfd)
 
 	return 0;
 }
-#endif
 
 /* SO_TIMESTAMPING: timestamp packets */
 static int
@@ -96,7 +88,7 @@ set_ts_opt(int sfd)
 }
 
 int
-open_socket(void)
+open_socket(int pollpri_wakeup)
 {
 	int sfd;
 	int tmp;
@@ -106,11 +98,11 @@ open_socket(void)
 	if (sfd == -1)
 		return -1;
 
-#ifdef USE_POLLPRI
-	tmp = set_pollpri_on_errqueue(sfd);
-	if (tmp == -1)
-		goto _go_close_socket;
-#endif
+	if (pollpri_wakeup) {
+		tmp = set_pollpri_on_errqueue(sfd);
+		if (tmp == -1)
+			goto _go_close_socket;
+	}
 
 	tmp = set_ts_opt(sfd);
 	if (tmp == -1)

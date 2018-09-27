@@ -13,14 +13,18 @@ timestamps. In normal behavior, one thread poll for
 timestamps ``loop()``, and other thread send packets
 ``main()``.
 
-We change the behavior by:
+The behavior can be changed using the following
+command line options (in any order):
 
-- Sending packets in the same thread that poll for their
-  timestamps. ``SEND_IN_SAME_THREAD`` flag.
-- Using ``POLLIN`` in poll events. ``USE_POLLIN`` flag.
-- Using ``POLLPRI`` in poll events. Involves setting a
-  kernel option to "instantaneous wake up" on error queue.
-  ``USE_POLLPRI`` flag. ``USE_POLLIN`` flag is ignored.
+- ``SEND_IN_SAME_THREAD``: Send packets in the same thread
+  that poll for their timestamps.
+- ``POLLIN``: Request ``POLLIN`` event.
+- ``POLLPRI``: Request ``POLLPRI`` event.
+- ``POLLPRI_WAKEUP``: Mask ``POLLPRI`` in wake up. This
+  set ``SO_SELECT_ERR_QUEUE`` socket option. The idea is
+  to allow "instantaneous wake up" on error queue.
+
+E.g.: ``$ ./main POLLPRI POLLPRI_WAKEUP``
 
 
 Compiling
@@ -29,8 +33,6 @@ Compiling
 ::
 
 	$ gcc -pthread -o main common.c main.c
-
-To add a flag (see section above) use ``-D <flag>``
 
 
 Behavior

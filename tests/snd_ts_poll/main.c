@@ -3,11 +3,17 @@
  * polling for send timestamp on socket's error queue
  */
 
+#include <poll.h>    /* POLL* */
 #include <pthread.h> /* pthread_*() */
+#include <string.h>  /* strcmp() */
 #include <unistd.h>  /* sleep() */
 
 /* open_socket() do_send() do_poll() do_recv() */
 #include "common.h"
+
+static int pollpri_wakeup = 0;
+static int send_in_same_thread = 0;
+static short request_mask = 0;
 
 /*
  * It's a thread. It does poll/recv, or send/poll/recv (when
@@ -19,11 +25,12 @@ loop(void *data)
 	int sfd = *((int*) data);
 
 	for (;;) {
-#ifdef SEND_IN_SAME_THREAD
-		sleep(1);
-		do_send(sfd);
-#endif
-		do_poll(sfd);
+		if (send_in_same_thread) {
+			sleep(1);
+			do_send(sfd);
+		}
+
+		do_poll(sfd, request_mask);
 		do_recv(sfd);
 	}
 
@@ -36,17 +43,31 @@ main(int argc, char **argv)
 	pthread_t loop_thread;
 	int sfd;
 
-	if ((sfd = open_socket()) == -1)
+	while (--argc) {
+		if (strcmp("POLLPRI", argv[argc]) == 0)
+			request_mask |= POLLPRI;
+		else if (strcmp("POLLIN", argv[argc]) == 0)
+			request_mask |= POLLIN;
+		else if (strcmp("POLLERR", argv[argc]) == 0)
+			request_mask |= POLLERR;
+		else if (strcmp("POLLPRI_WAKEUP", argv[argc]) == 0)
+			pollpri_wakeup = 1;
+		else if (strcmp("SEND_IN_SAME_THREAD", argv[argc]) == 0)
+			send_in_same_thread = 1;
+	}
+
+	if ((sfd = open_socket(pollpri_wakeup)) == -1)
 		return 1;
 
 	/* create thread and wait for it to terminate */
 	pthread_create(&loop_thread, NULL, loop, &sfd);
-#ifndef SEND_IN_SAME_THREAD
-	for (;;) {
-		sleep(1);
-		do_send(sfd);
+	if (!send_in_same_thread) {
+		for (;;) {
+			sleep(1);
+			do_send(sfd);
+		}
 	}
-#endif
+
 	pthread_join(loop_thread, NULL);
 
 	return 0;
