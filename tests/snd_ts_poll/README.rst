@@ -30,9 +30,7 @@ E.g.: ``$ ./main POLLPRI POLLPRI_WAKEUP``
 Compiling
 =========
 
-::
-
-	$ gcc -pthread -o main common.c main.c
+``$ make``
 
 
 Behavior
