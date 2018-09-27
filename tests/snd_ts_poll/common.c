@@ -57,8 +57,6 @@ do_send(int sfd)
 
 	sendto(sfd, &tmp, sizeof(tmp), 0, (struct sockaddr*) &saddr,
 	       sizeof(saddr));
-
-	sleep(1);
 }
 
 #ifdef USE_POLLPRI

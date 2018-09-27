@@ -4,6 +4,7 @@
  */
 
 #include <pthread.h> /* pthread_*() */
+#include <unistd.h>  /* sleep() */
 
 /* open_socket() do_send() do_poll() do_recv() */
 #include "common.h"
@@ -19,6 +20,7 @@ loop(void *data)
 
 	for (;;) {
 #ifdef SEND_IN_SAME_THREAD
+		sleep(1);
 		do_send(sfd);
 #endif
 		do_poll(sfd);
@@ -40,8 +42,10 @@ main(int argc, char **argv)
 	/* create thread and wait for it to terminate */
 	pthread_create(&loop_thread, NULL, loop, &sfd);
 #ifndef SEND_IN_SAME_THREAD
-	for (;;)
+	for (;;) {
+		sleep(1);
 		do_send(sfd);
+	}
 #endif
 	pthread_join(loop_thread, NULL);
 
