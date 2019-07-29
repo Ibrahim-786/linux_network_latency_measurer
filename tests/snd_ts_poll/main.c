@@ -11,7 +11,6 @@
 /* open_socket() do_send() do_poll() do_recv() */
 #include "common.h"
 
-static int pollpri_wakeup = 0;
 static int send_in_same_thread = 0;
 static short request_mask = 0;
 
@@ -42,6 +41,7 @@ main(int argc, char **argv)
 {
 	pthread_t loop_thread;
 	int sfd;
+	int flags = 0;
 
 	while (--argc) {
 		if (strcmp("POLLPRI", argv[argc]) == 0)
@@ -50,13 +50,13 @@ main(int argc, char **argv)
 			request_mask |= POLLIN;
 		else if (strcmp("POLLERR", argv[argc]) == 0)
 			request_mask |= POLLERR;
-		else if (strcmp("POLLPRI_WAKEUP", argv[argc]) == 0)
-			pollpri_wakeup = 1;
 		else if (strcmp("SEND_IN_SAME_THREAD", argv[argc]) == 0)
 			send_in_same_thread = 1;
+		else if (strcmp("POLLPRI_WAKEUP", argv[argc]) == 0)
+			flags |= POLLPRI_WAKEUP_ON_ERROR_QUEUE;
 	}
 
-	if ((sfd = open_socket(pollpri_wakeup)) == -1)
+	if ((sfd = open_socket(flags)) == -1)
 		return 1;
 
 	/* create thread and wait for it to terminate */

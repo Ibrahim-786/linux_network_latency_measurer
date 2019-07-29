@@ -88,7 +88,7 @@ set_ts_opt(int sfd)
 }
 
 int
-open_socket(int pollpri_wakeup)
+open_socket(int flags)
 {
 	int sfd;
 	int tmp;
@@ -98,7 +98,7 @@ open_socket(int pollpri_wakeup)
 	if (sfd == -1)
 		return -1;
 
-	if (pollpri_wakeup) {
+	if (flags & POLLPRI_WAKEUP_ON_ERROR_QUEUE) {
 		tmp = set_pollpri_on_errqueue(sfd);
 		if (tmp == -1)
 			goto _go_close_socket;
