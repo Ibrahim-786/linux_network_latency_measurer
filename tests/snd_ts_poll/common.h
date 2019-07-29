@@ -1,6 +1,7 @@
 
 #define PORT  8080
 
+#define BIND_SOCKET                   (1 << 0)
 #define POLLPRI_WAKEUP_ON_ERROR_QUEUE (1 << 1)
 
 int

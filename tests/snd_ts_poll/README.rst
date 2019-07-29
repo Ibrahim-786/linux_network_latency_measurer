@@ -23,6 +23,7 @@ command line options (in any order):
 - ``POLLPRI_WAKEUP``: Mask ``POLLPRI`` in wake up. This
   set ``SO_SELECT_ERR_QUEUE`` socket option. The idea is
   to allow "instantaneous wake up" on error queue.
+- ``BIND_SOCKET``: bind socket to receive packets.
 
 E.g.: ``$ ./main POLLPRI POLLPRI_WAKEUP``
 

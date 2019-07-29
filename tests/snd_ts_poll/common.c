@@ -98,6 +98,19 @@ open_socket(int flags)
 	if (sfd == -1)
 		return -1;
 
+	if (flags & BIND_SOCKET) {
+		struct sockaddr_in saddr;
+
+		saddr.sin_family = AF_INET;
+		saddr.sin_port = htons(PORT);
+		saddr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+		tmp = bind(sfd, (const struct sockaddr*) &saddr,
+		           sizeof(saddr));
+		if (tmp == -1)
+			goto _go_close_socket;
+	}
+
 	if (flags & POLLPRI_WAKEUP_ON_ERROR_QUEUE) {
 		tmp = set_pollpri_on_errqueue(sfd);
 		if (tmp == -1)

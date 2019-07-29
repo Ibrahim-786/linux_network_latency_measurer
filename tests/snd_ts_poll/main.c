@@ -54,6 +54,8 @@ main(int argc, char **argv)
 			send_in_same_thread = 1;
 		else if (strcmp("POLLPRI_WAKEUP", argv[argc]) == 0)
 			flags |= POLLPRI_WAKEUP_ON_ERROR_QUEUE;
+		else if (strcmp("BIND_SOCKET", argv[argc]) == 0)
+			flags |= BIND_SOCKET;
 	}
 
 	if ((sfd = open_socket(flags)) == -1)
