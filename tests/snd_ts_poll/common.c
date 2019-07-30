@@ -35,6 +35,8 @@ do_recv(int sfd)
 {
 	char tmp;
 
+	while (recv(sfd, &tmp, sizeof(tmp), 0)            == sizeof(tmp));
+
 	while (recv(sfd, &tmp, sizeof(tmp), MSG_ERRQUEUE) == sizeof(tmp));
 }
 
