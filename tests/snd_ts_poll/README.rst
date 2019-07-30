@@ -24,6 +24,7 @@ command line options (in any order):
   set ``SO_SELECT_ERR_QUEUE`` socket option. The idea is
   to allow "instantaneous wake up" on error queue.
 - ``BIND_SOCKET``: bind socket to receive packets.
+- ``ENABLE_TX_TIMESTAMP``: Enable transmit timestamping.
 
 E.g.: ``$ ./main POLLPRI POLLPRI_WAKEUP``
 

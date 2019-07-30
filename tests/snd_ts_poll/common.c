@@ -119,9 +119,11 @@ open_socket(int flags)
 			goto _go_close_socket;
 	}
 
-	tmp = set_ts_opt(sfd);
-	if (tmp == -1)
-		goto _go_close_socket;
+	if (flags & ENABLE_TX_TIMESTAMP) {
+		tmp = set_ts_opt(sfd);
+		if (tmp == -1)
+			goto _go_close_socket;
+	}
 
 	return sfd;
 

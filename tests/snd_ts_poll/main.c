@@ -56,6 +56,8 @@ main(int argc, char **argv)
 			flags |= POLLPRI_WAKEUP_ON_ERROR_QUEUE;
 		else if (strcmp("BIND_SOCKET", argv[argc]) == 0)
 			flags |= BIND_SOCKET;
+		else if (strcmp("ENABLE_TX_TIMESTAMP", argv[argc]) == 0)
+			flags |= ENABLE_TX_TIMESTAMP;
 	}
 
 	if ((sfd = open_socket(flags)) == -1)
