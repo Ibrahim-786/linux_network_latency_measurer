@@ -3,10 +3,12 @@
  * polling for send timestamp on socket's error queue
  */
 
+#include <getopt.h>  /* getopt_long() */
 #include <poll.h>    /* POLL* */
 #include <pthread.h> /* pthread_*() */
+#include <stdio.h>   /* printf() */
 #include <string.h>  /* strcmp() */
-#include <unistd.h>  /* sleep() */
+#include <unistd.h>  /* sleep(), getopt_long() */
 
 /* open_socket() do_send() do_poll() do_recv() */
 #include "common.h"
@@ -43,21 +45,38 @@ main(int argc, char **argv)
 	int sfd;
 	int flags = 0;
 
-	while (--argc) {
-		if (strcmp("POLLPRI", argv[argc]) == 0)
-			request_mask |= POLLPRI;
-		else if (strcmp("POLLIN", argv[argc]) == 0)
-			request_mask |= POLLIN;
-		else if (strcmp("POLLERR", argv[argc]) == 0)
-			request_mask |= POLLERR;
-		else if (strcmp("SEND_IN_SAME_THREAD", argv[argc]) == 0)
-			send_in_same_thread = 1;
-		else if (strcmp("POLLPRI_WAKEUP", argv[argc]) == 0)
-			flags |= POLLPRI_WAKEUP_ON_ERROR_QUEUE;
-		else if (strcmp("BIND_SOCKET", argv[argc]) == 0)
-			flags |= BIND_SOCKET;
-		else if (strcmp("ENABLE_TX_TIMESTAMP", argv[argc]) == 0)
-			flags |= ENABLE_TX_TIMESTAMP;
+	while (1) {
+		int c;
+		struct option long_options[] = {
+			{ "help",          no_argument, 0, 'h' },
+			{ "pollpri",       no_argument, 0, 'p' },
+			{ "pollin",        no_argument, 0, 'i' },
+			{ "pollerr",       no_argument, 0, 'e' },
+			{ "single-thread", no_argument, 0, 's' },
+			{ "mask-pollpri",  no_argument, 0, 'm' },
+			{ "bind-socket",   no_argument, 0, 'b' },
+			{ "tx-timestamp",  no_argument, 0, 't' },
+			{ 0,               0,           0, 0   },
+		};
+
+		c = getopt_long(argc, argv, "", long_options, NULL);
+		if (c == -1)
+			break;
+
+		switch (c) {
+		case 'h':
+			c = 0;
+			while (long_options[c].name)
+				printf("--%s\n", long_options[c++].name);
+			return 0;
+		case 'p': request_mask |= POLLPRI; break;
+		case 'i': request_mask |= POLLIN;  break;
+		case 'e': request_mask |= POLLERR; break;
+		case 's': send_in_same_thread = 1; break;
+		case 'm': flags |= POLLPRI_WAKEUP_ON_ERROR_QUEUE; break;
+		case 'b': flags |= BIND_SOCKET;                   break;
+		case 't': flags |= ENABLE_TX_TIMESTAMP;           break;
+		}
 	}
 
 	if ((sfd = open_socket(flags)) == -1)

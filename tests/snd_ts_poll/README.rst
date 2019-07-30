@@ -16,17 +16,19 @@ timestamps ``loop()``, and other thread send packets
 The behavior can be changed using the following
 command line options (in any order):
 
-- ``SEND_IN_SAME_THREAD``: Send packets in the same thread
-  that poll for their timestamps.
-- ``POLLIN``: Request ``POLLIN`` event.
-- ``POLLPRI``: Request ``POLLPRI`` event.
-- ``POLLPRI_WAKEUP``: Mask ``POLLPRI`` in wake up. This
-  set ``SO_SELECT_ERR_QUEUE`` socket option. The idea is
-  to allow "instantaneous wake up" on error queue.
-- ``BIND_SOCKET``: bind socket to receive packets.
-- ``ENABLE_TX_TIMESTAMP``: Enable transmit timestamping.
+- ``--pollpri``: Request ``POLLPRI`` event.
+- ``--pollin``: Request ``POLLIN`` event.
+- ``--pollerr``: Request ``POLLERR`` event (ignored because
+  this event is always requested).
+- ``--single-thread``: Send packets in the same thread that
+  poll for their timestamps.
+- ``--mask-pollpri``: Mask ``POLLPRI`` in wake up. This set
+  ``SO_SELECT_ERR_QUEUE`` socket option. The idea is to
+  allow "instantaneous wake up" on error queue.
+- ``--bind-socket``: Bind socket to receive packets.
+- ``--tx-timestamp``: Enable transmit timestamping.
 
-E.g.: ``$ ./main POLLPRI POLLPRI_WAKEUP``
+E.g.: ``$ ./main --pollpri --mask-pollpri``
 
 
 Compiling
