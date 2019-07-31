@@ -9,12 +9,32 @@
 #include <poll.h> /* poll() */
 #include <string.h> /* memset() */
 #include <sys/types.h> /* socket() recv() */
+#include <sys/select.h> /* select() */
 #include <sys/socket.h> /* socket() recv() */
 #include <unistd.h> /* close() */
 
 #include <linux/net_tstamp.h> /* timestamp stuff */
 
 #include "common.h"
+
+int
+do_select(int sfd, short request_mask)
+{
+	fd_set rfds, wfds, efds;
+
+	FD_ZERO(&rfds);
+	FD_ZERO(&wfds);
+	FD_ZERO(&efds);
+
+	if (request_mask & POLLIN)
+		FD_SET(sfd, &rfds);
+	if (request_mask & POLLOUT)
+		FD_SET(sfd, &wfds);
+	if (request_mask & POLLPRI)
+		FD_SET(sfd, &efds);
+
+	return select(sfd + 1, &rfds, &wfds, &efds, NULL);
+}
 
 int
 do_poll(int sfd, short request_mask)

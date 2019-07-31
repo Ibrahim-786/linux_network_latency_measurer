@@ -22,6 +22,8 @@ command line options (in any order):
   this event is always requested).
 - ``--single-thread``: Send packets in the same thread that
   poll for their timestamps.
+- ``--use-select``: Use ``select()`` system call instead of
+  ``poll()``.
 - ``--mask-pollpri``: Mask ``POLLPRI`` in wake up. This set
   ``SO_SELECT_ERR_QUEUE`` socket option. The idea is to
   allow "instantaneous wake up" on error queue.

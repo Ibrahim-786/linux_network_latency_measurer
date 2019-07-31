@@ -14,6 +14,7 @@
 #include "common.h"
 
 static int send_in_same_thread = 0;
+static int use_select = 0;
 static short request_mask = 0;
 
 /*
@@ -31,7 +32,10 @@ loop(void *data)
 			do_send(sfd);
 		}
 
-		do_poll(sfd, request_mask);
+		if (use_select)
+			do_select(sfd, request_mask);
+		else
+			do_poll(sfd, request_mask);
 		do_recv(sfd);
 	}
 
@@ -53,6 +57,7 @@ main(int argc, char **argv)
 			{ "pollin",        no_argument, 0, 'i' },
 			{ "pollerr",       no_argument, 0, 'e' },
 			{ "single-thread", no_argument, 0, 's' },
+			{ "use-select",    no_argument, 0, 'S' },
 			{ "mask-pollpri",  no_argument, 0, 'm' },
 			{ "bind-socket",   no_argument, 0, 'b' },
 			{ "tx-timestamp",  no_argument, 0, 't' },
@@ -73,6 +78,7 @@ main(int argc, char **argv)
 		case 'i': request_mask |= POLLIN;  break;
 		case 'e': request_mask |= POLLERR; break;
 		case 's': send_in_same_thread = 1; break;
+		case 'S': use_select = 1;          break;
 		case 'm': flags |= POLLPRI_WAKEUP_ON_ERROR_QUEUE; break;
 		case 'b': flags |= BIND_SOCKET;                   break;
 		case 't': flags |= ENABLE_TX_TIMESTAMP;           break;

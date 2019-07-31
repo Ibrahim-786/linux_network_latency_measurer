@@ -6,6 +6,9 @@
 #define ENABLE_TX_TIMESTAMP           (1 << 2)
 
 int
+do_select(int sfd, short request_mask);
+
+int
 do_poll(int sfd, short request_mask);
 
 void
